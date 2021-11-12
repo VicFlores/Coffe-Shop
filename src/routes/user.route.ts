@@ -6,7 +6,6 @@ import {
   postUserSchema,
   putUserSchema,
 } from '../schemas/user.schema';
-import { QueryResult } from 'pg';
 
 const router = express.Router();
 const service = new Users();

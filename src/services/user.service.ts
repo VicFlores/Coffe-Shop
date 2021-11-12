@@ -1,5 +1,6 @@
 import { QueryResult } from 'pg';
 import { pool } from '../database';
+import bcrypt from 'bcrypt';
 import { iUser } from '../interfaces/iUser';
 import httpException from '../exception/httpException';
 
@@ -20,10 +21,22 @@ class Users {
     return response.rows;
   }
 
+  async getUserByEmail(email: string) {
+    const response: QueryResult = await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
+    if (response.rowCount === 0) {
+      throw new httpException(404, 'User not found');
+    }
+    return response.rows;
+  }
+
   async postUser(body: iUser) {
+    const passHash = await bcrypt.hash(body.password, 10);
     await pool.query(
       'INSERT INTO users (name, password, email) VALUES ($1, $2, $3)',
-      [body.name, body.password, body.email]
+      [body.name, passHash, body.email]
     );
 
     return 'User created successfully';
