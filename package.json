@@ -8,6 +8,9 @@
     "dev": "ts-node-dev --respawn ./src/server.ts"
   },
   "author": "Vic Ferman Flores Escobar",
+  "repository": {
+    "github": "https://github.com/VicFlores/Coffe-Shop"
+  },
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -15,6 +18,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
+    "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.1",
     "ts-node-dev": "^1.1.8"

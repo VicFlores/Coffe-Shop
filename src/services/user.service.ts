@@ -13,6 +13,9 @@ class Users {
       'SELECT * FROM users WHERE id = $1',
       [id]
     );
+    if (response.rowCount === 0) {
+      throw new Error('User not found');
+    }
     return response.rows;
   }
 
