@@ -1,6 +1,7 @@
 import { QueryResult } from 'pg';
 import { pool } from '../database';
 import { iUser } from '../interfaces/iUser';
+import httpException from '../exception/httpException';
 
 class Users {
   async getUsers() {
@@ -14,7 +15,7 @@ class Users {
       [id]
     );
     if (response.rowCount === 0) {
-      throw new Error('User not found');
+      throw new httpException(404, 'User not found');
     }
     return response.rows;
   }
@@ -24,10 +25,12 @@ class Users {
       'INSERT INTO users (name, password, email) VALUES ($1, $2, $3)',
       [body.name, body.password, body.email]
     );
+
     return 'User created successfully';
   }
 
   async putUser(body: iUser, id: string) {
+    await this.getUserById(id);
     await pool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [
       body.name,
       body.email,
@@ -37,6 +40,7 @@ class Users {
   }
 
   async deleteUser(id: string) {
+    await this.getUserById(id);
     await pool.query('DELETE FROM users WHERE id = $1', [id]);
     return 'User removed successfully';
   }

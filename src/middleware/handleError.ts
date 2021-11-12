@@ -1,18 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import { DatabaseError } from 'pg-protocol';
+import httpException from '../exception/httpException';
 
 export const handleErrors = (
-  err: Error,
+  err: httpException,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  if (err) {
-    return res.status(400).json({
-      message: err.message,
-    });
-  }
-  next(err);
+  const status = err.status || 500;
+  const message = err.message || 'Internal server error';
+  res.status(status).json({
+    message,
+    status,
+  });
 };
 
 export const handleDatabaseErrors = (
