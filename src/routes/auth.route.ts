@@ -8,6 +8,9 @@ router.post(
   '/login',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const body = req.body;
+      const response = await service.logUser(body);
+      return res.status(200).json(response);
     } catch (error) {
       next(error);
     }

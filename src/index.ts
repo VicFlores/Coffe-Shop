@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 
 routerApi(app);
 
-app.use(handleDatabaseErrors);
 app.use(handleErrors);
+app.use(handleDatabaseErrors);
 
 export default app;

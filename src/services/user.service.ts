@@ -26,20 +26,23 @@ class Users {
       'SELECT * FROM users WHERE email = $1',
       [email]
     );
-    if (response.rowCount === 0) {
-      throw new httpException(404, 'User not found');
-    }
-    return response.rows;
+    return response.rowCount;
   }
 
   async postUser(body: iUser) {
     const passHash = await bcrypt.hash(body.password, 10);
+    const userByEmail = await this.getUserByEmail(body.email);
+
+    if (userByEmail === 1) {
+      throw new httpException(400, 'User already exist');
+    }
+
     await pool.query(
       'INSERT INTO users (name, password, email) VALUES ($1, $2, $3)',
       [body.name, passHash, body.email]
     );
 
-    return 'User created successfully';
+    return 'User created';
   }
 
   async putUser(body: iUser, id: string) {
@@ -49,6 +52,7 @@ class Users {
       body.email,
       id,
     ]);
+
     return 'User modified successfully';
   }
 
