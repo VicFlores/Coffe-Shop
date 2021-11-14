@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { DatabaseError } from 'pg-protocol';
 import httpException from '../exception/httpException';
+import jwtException from '../exception/jwtException';
 
 export const handleErrors = (
   err: httpException,
@@ -16,6 +17,20 @@ export const handleErrors = (
   });
 };
 
+export const handleJwtError = (
+  err: jwtException,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const status = err.status || 401;
+  const message = err.message || 'Jwt error';
+  res.status(status).json({
+    message,
+    status,
+  });
+};
+
 export const handleDatabaseErrors = (
   err: DatabaseError,
   req: Request,
@@ -24,7 +39,7 @@ export const handleDatabaseErrors = (
 ) => {
   if (err.severity) {
     return res.status(409).json({
-      message: err.detail,
+      message: err,
     });
   }
   next(err);

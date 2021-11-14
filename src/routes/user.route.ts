@@ -6,6 +6,7 @@ import {
   postUserSchema,
   putUserSchema,
 } from '../schemas/user.schema';
+import tokenValidation from '../middleware/verifyToken';
 
 const router = express.Router();
 const service = new Users();
@@ -21,6 +22,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 router.get(
   '/:id',
+  tokenValidation,
   handlerValidator(getUserByIdSchema, 'params'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -23,7 +23,18 @@ class Auth {
       throw new httpException(404, 'User or password! incorrect');
     }
 
-    return userByEmail.rows[0];
+    const resId = userByEmail.rows[0].id;
+
+    const token: string = jwt.sign(
+      { id: resId.id },
+      process.env.TOKEN_SECRET || '',
+      { expiresIn: '1h' }
+    );
+
+    return {
+      user: userByEmail.rows,
+      token,
+    };
   }
 }
 

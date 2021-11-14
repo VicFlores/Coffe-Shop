@@ -3,7 +3,11 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import routerApi from './routes';
-import { handleDatabaseErrors, handleErrors } from './middleware/handleError';
+import {
+  handleDatabaseErrors,
+  handleErrors,
+  handleJwtError,
+} from './middleware/handleError';
 
 dotenv.config({ path: './.env' });
 const app: express.Application = express();
@@ -15,7 +19,8 @@ app.use(express.urlencoded({ extended: false }));
 
 routerApi(app);
 
-app.use(handleErrors);
 app.use(handleDatabaseErrors);
+app.use(handleJwtError);
+app.use(handleErrors);
 
 export default app;
