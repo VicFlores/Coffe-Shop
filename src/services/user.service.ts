@@ -10,7 +10,7 @@ class Users {
     return response.rows;
   }
 
-  async getUserById(id: string) {
+  async getUserById(id: string | (() => string) | undefined) {
     const response: QueryResult = await pool.query(
       'SELECT * FROM users WHERE id = $1',
       [id]
@@ -26,14 +26,14 @@ class Users {
       'SELECT * FROM users WHERE email = $1',
       [email]
     );
-    return response.rowCount;
+    return response;
   }
 
   async postUser(body: iUser) {
     const passHash = await bcrypt.hash(body.password, 10);
     const userByEmail = await this.getUserByEmail(body.email);
 
-    if (userByEmail === 1) {
+    if (userByEmail.rowCount === 1) {
       throw new httpException(400, 'User already exist');
     }
 

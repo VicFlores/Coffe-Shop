@@ -9,12 +9,15 @@ export const handleErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  const status = err.status || 500;
-  const message = err.message || 'Internal server error';
-  res.status(status).json({
-    message,
-    status,
-  });
+  if (err) {
+    const status = err.status || 500;
+    const message = err.message || 'Internal server error';
+    return res.status(status).json({
+      message,
+      status,
+    });
+  }
+  next(err);
 };
 
 export const handleJwtError = (
@@ -23,12 +26,15 @@ export const handleJwtError = (
   res: Response,
   next: NextFunction
 ) => {
-  const status = err.status || 401;
-  const message = err.message || 'Jwt error';
-  res.status(status).json({
-    message,
-    status,
-  });
+  if (err) {
+    const status = err.status || 401;
+    const message = err.message || 'Jwt error';
+    return res.status(status).json({
+      message,
+      status,
+    });
+  }
+  next(err);
 };
 
 export const handleDatabaseErrors = (
