@@ -28,7 +28,7 @@ export const handleJwtError = (
 ) => {
   if (err) {
     const status = err.status || 401;
-    const message = err.message || 'Jwt error';
+    const message = err.message || 'Authentication error';
     return res.status(status).json({
       message,
       status,
