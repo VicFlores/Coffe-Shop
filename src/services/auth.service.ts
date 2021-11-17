@@ -25,7 +25,7 @@ class Auth {
       sub: id,
     };
 
-    const token: string = jwt.sign(payload, process.env.TOKEN_SECRET || '', {
+    const token: string = jwt.sign(payload, process.env.TOKEN_SECRET as string, {
       expiresIn: '1h',
     });
 
@@ -59,7 +59,7 @@ class Auth {
     const { id, email } = userByEmail.rows[0];
     const payload = { sub: id };
 
-    const token = jwt.sign(payload, process.env.TOKEN_SECRET_EMAIL || '', {
+    const token = jwt.sign(payload, process.env.TOKEN_SECRET_EMAIL as string, {
       expiresIn: '15min',
     });
 
@@ -80,7 +80,7 @@ class Auth {
   }
 
   async changePassword(userToken: string, newPassword: string) {
-    const payload = jwt.verify(userToken, process.env.TOKEN_SECRET_EMAIL || '');
+    const payload = jwt.verify(userToken, process.env.TOKEN_SECRET_EMAIL as string);
     const user = await userService.getUserById(payload.sub);
 
     const { token, id } = user[0];
